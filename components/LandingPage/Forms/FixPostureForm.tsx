@@ -6,6 +6,7 @@ import QuestionCard from "./Shared/QuestionCard";
 import MultiSelect from "./Shared/MultiSelect";
 import SliderInput from "./Shared/SliderInput";
 import FormNavigation from "./Shared/FormNavigation";
+import SuccessMessage from "../SuccessMessage";
 
 interface FormData {
   discomfortAreas: string[];
@@ -24,6 +25,7 @@ interface FixPostureFormProps {
 
 const FixPostureForm: React.FC<FixPostureFormProps> = ({ onComplete }) => {
   const [currentStep, setCurrentStep] = useState(1);
+  const [showSuccess, setShowSuccess] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     discomfortAreas: [],
     workSetup: "",
@@ -122,10 +124,7 @@ const FixPostureForm: React.FC<FixPostureFormProps> = ({ onComplete }) => {
 
   const handleFinish = () => {
     console.log("Form completed:", formData);
-    alert(
-      "Assessment completed! Your personalized posture improvement plan will be ready soon."
-    );
-    onComplete();
+    setShowSuccess(true);
   };
 
   const canGoNext = () => {
@@ -519,22 +518,33 @@ const FixPostureForm: React.FC<FixPostureFormProps> = ({ onComplete }) => {
   };
 
   return (
-    <FormStep
-      step={currentStep}
-      totalSteps={totalSteps}
-      title="Fix Posture Assessment"
-      subtitle="Let's identify your posture challenges and create a personalized improvement plan"
-    >
-      {renderStep()}
-      <FormNavigation
-        onPrevious={handlePrevious}
-        onNext={handleNext}
-        canGoNext={canGoNext()}
-        canGoPrevious={currentStep > 1}
-        isLastStep={currentStep === totalSteps}
-        onFinish={handleFinish}
-      />
-    </FormStep>
+    <>
+      <FormStep
+        step={currentStep}
+        totalSteps={totalSteps}
+        title="Fix Posture Assessment"
+        subtitle="Let's identify your posture challenges and create a personalized improvement plan"
+      >
+        {renderStep()}
+        <FormNavigation
+          onPrevious={handlePrevious}
+          onNext={handleNext}
+          canGoNext={canGoNext()}
+          canGoPrevious={currentStep > 1}
+          isLastStep={currentStep === totalSteps}
+          onFinish={handleFinish}
+        />
+      </FormStep>
+      {showSuccess && (
+        <SuccessMessage
+          onClose={() => {
+            setShowSuccess(false);
+            onComplete();
+          }}
+          assessmentType="fix-posture"
+        />
+      )}
+    </>
   );
 };
 

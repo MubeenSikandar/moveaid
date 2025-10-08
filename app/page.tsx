@@ -1,11 +1,11 @@
-import ChoosePath from "@/components/ChoosePath";
-import HowItWorks from "@/components/HowItWorks";
-import ProgressYouCanFeel from "@/components/ProgressYouCanFeel";
-import SmarterCoachingBuiltIn from "@/components/SmarterCoachingBuiltIn";
-import TopSection from "@/components/TopSection";
-import TrackWhatMattersMost from "@/components/TrackWhatMattersMost";
-import YourBodyYourPlan from "@/components/YourBodyYourPlan";
-import MemberStories from "@/components/MemberStories";
+import ChoosePath from "@/components/LandingPage/ChoosePath";
+import HowItWorks from "@/components/LandingPage/HowItWorks";
+import ProgressYouCanFeel from "@/components/LandingPage/ProgressYouCanFeel";
+import SmarterCoachingBuiltIn from "@/components/LandingPage/SmarterCoachingBuiltIn";
+import TopSection from "@/components/LandingPage/TopSection";
+import TrackWhatMattersMost from "@/components/LandingPage/TrackWhatMattersMost";
+import YourBodyYourPlan from "@/components/LandingPage/YourBodyYourPlan";
+import MemberStories from "@/components/LandingPage/MemberStories";
 
 export default function Home() {
   return (

@@ -6,6 +6,7 @@ import QuestionCard from "./Shared/QuestionCard";
 import MultiSelect from "./Shared/MultiSelect";
 import SliderInput from "./Shared/SliderInput";
 import FormNavigation from "./Shared/FormNavigation";
+import SuccessMessage from "../SuccessMessage";
 
 interface FormData {
   injuryType: string;
@@ -30,6 +31,7 @@ const RecoverFromInjuryForm: React.FC<RecoverFromInjuryFormProps> = ({
   onComplete,
 }) => {
   const [currentStep, setCurrentStep] = useState(1);
+  const [showSuccess, setShowSuccess] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     injuryType: "",
     injuryDate: "",
@@ -131,10 +133,7 @@ const RecoverFromInjuryForm: React.FC<RecoverFromInjuryFormProps> = ({
   const handleFinish = () => {
     console.log("Form completed:", formData);
     // Here you would typically save the data and redirect
-    alert(
-      "Assessment completed! Your personalized recovery plan will be ready soon."
-    );
-    onComplete();
+    setShowSuccess(true);
   };
 
   const canGoNext = () => {
@@ -592,22 +591,33 @@ const RecoverFromInjuryForm: React.FC<RecoverFromInjuryFormProps> = ({
   };
 
   return (
-    <FormStep
-      step={currentStep}
-      totalSteps={totalSteps}
-      title="Recover From Injury Assessment"
-      subtitle="Help us understand your injury and create a personalized recovery plan"
-    >
-      {renderStep()}
-      <FormNavigation
-        onPrevious={handlePrevious}
-        onNext={handleNext}
-        canGoNext={canGoNext()}
-        canGoPrevious={currentStep > 1}
-        isLastStep={currentStep === totalSteps}
-        onFinish={handleFinish}
-      />
-    </FormStep>
+    <>
+      <FormStep
+        step={currentStep}
+        totalSteps={totalSteps}
+        title="Recover From Injury Assessment"
+        subtitle="Help us understand your injury and create a personalized recovery plan"
+      >
+        {renderStep()}
+        <FormNavigation
+          onPrevious={handlePrevious}
+          onNext={handleNext}
+          canGoNext={canGoNext()}
+          canGoPrevious={currentStep > 1}
+          isLastStep={currentStep === totalSteps}
+          onFinish={handleFinish}
+        />
+      </FormStep>
+      {showSuccess && (
+        <SuccessMessage
+          onClose={() => {
+            setShowSuccess(false);
+            onComplete();
+          }}
+          assessmentType="recover-from-injury"
+        />
+      )}
+    </>
   );
 };
 
