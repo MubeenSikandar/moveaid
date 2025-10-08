@@ -14,7 +14,7 @@ interface Activity {
   time: string;
   duration: string;
   icon: string;
-  completed: boolean;
+  completed?: boolean;
 }
 
 const NextMilestoneCard: React.FC = () => {
