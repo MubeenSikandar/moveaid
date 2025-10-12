@@ -1,0 +1,8 @@
+# Clean script configuration
+# This file documents what gets cleaned by npm run clean commands
+
+# npm run clean - Removes .next directory only
+# npm run clean:all - Removes .next and node_modules/.cache
+# npm run dev:clean - Cleans and starts dev server
+# npm run build:clean - Cleans and builds for production
+

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import React from "react";
+import Link from "next/link";
 import {
   SignInButton,
   SignUpButton,
@@ -61,11 +62,11 @@ const Header = () => {
         Try a Demo
       </p>
       <SignedOut>
-        <SignInButton>
+        <Link href="/auth">
           <button className="bg-[#AD85D1] text-white px-6 py-4 rounded-4xl cursor-pointer hover:bg-[#9A73C7] transition-colors">
             Get Started
           </button>
-        </SignInButton>
+        </Link>
       </SignedOut>
       <SignedIn>
         <UserButton />

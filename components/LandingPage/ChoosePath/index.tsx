@@ -1,11 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Image from "next/image";
-import { SignedIn, SignedOut, SignInButton, SignUpButton } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
+import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 import PathCard from "./PathCard";
-import FormRouter from "../Forms/FormRouter";
-import ProtectedRoute from "../ProtectedRoute";
 import RecoverFromInjury from "@/assets/RecoverFromInjury.svg";
 import FixPosture from "@/assets/FixPosture.svg";
 import BuildAMovementHabit from "@/assets/BuildAMovementHabit.svg";
@@ -66,27 +65,13 @@ const pathAssets = [
 ];
 
 const ChoosePath = () => {
-  const [selectedForm, setSelectedForm] = useState<string | null>(null);
+  const router = useRouter();
 
   const handlePathClick = (formType: string) => {
-    setSelectedForm(formType);
+    // Store the selected path type in localStorage or pass as query param
+    localStorage.setItem("selectedPath", formType);
+    router.push("/assessment");
   };
-
-  const handleBack = () => {
-    setSelectedForm(null);
-  };
-
-  if (selectedForm) {
-    return (
-      <ProtectedRoute>
-        <FormRouter
-          formType={selectedForm}
-          onBack={handleBack}
-          onComplete={handleBack}
-        />
-      </ProtectedRoute>
-    );
-  }
 
   return (
     <div className="flex flex-col gap-4 items-center justify-center py-8">
