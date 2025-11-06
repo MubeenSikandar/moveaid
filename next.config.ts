@@ -3,6 +3,18 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
 
+  // Configure external image domains
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "via.placeholder.com",
+        port: "",
+        pathname: "/**",
+      },
+    ],
+  },
+
   // Optimize for development to prevent cache issues
   onDemandEntries: {
     // period (in ms) where the server will keep pages in the buffer

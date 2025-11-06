@@ -32,9 +32,9 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="w-full h-full flex flex-col items-center px-[3%] py-3">
+    <div className="w-full h-full flex flex-col px-[3%] py-3 overflow-hidden">
       <Header activeButton={activeButton} setActiveButton={setActiveButton} />
-      <div className="w-full h-screen flex items-center justify-between">
+      <div className="w-full flex-1 flex items-center justify-between overflow-hidden">
         {renderContent()}
       </div>
     </div>
