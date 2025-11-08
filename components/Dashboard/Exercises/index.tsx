@@ -465,7 +465,7 @@ const Exercises = () => {
   };
 
   return (
-    <div className="flex gap-4 w-full h-screen p-4 bg-gray-50">
+    <div className="flex gap-4 w-full h-screen p-4 bg-[#ebe7dd] rounded-3xl">
       {/* Main Exercise Area - Left Side */}
       <div className="flex-1 h-full bg-gradient-to-br from-[#ebe7dd] to-[#f5f1e8] rounded-3xl p-8 shadow-2xl flex flex-col items-center justify-center relative overflow-hidden">
         {!cameraActive ? (
@@ -623,7 +623,7 @@ const Exercises = () => {
             onClick={() => handleExerciseSelect(index)}
             className={`bg-gradient-to-br from-[#ebe7dd] to-[#f5f1e8] rounded-3xl p-6 shadow-lg cursor-pointer transition-all duration-200 ${
               currentExerciseIndex === index
-                ? "ring-4 ring-[#AD85D1] transform scale-105 shadow-2xl"
+                ? "ring-4 ring-[#949392] transform scale-105 shadow-2xl"
                 : "hover:shadow-xl hover:transform hover:scale-102"
             }`}
           >
