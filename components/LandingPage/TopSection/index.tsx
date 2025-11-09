@@ -43,13 +43,13 @@ const TopSection = () => {
         </div>
 
         {/* Bottom Image */}
-        <div className="mt-16 w-full">
+        <div className="mt-16 w-full flex items-center justify-center">
           <Image
             src={TopImage}
             alt="top-section"
             width={1838}
             height={958}
-            className="w-full h-auto"
+            className="w-[818px] h-auto rounded-3xl"
           />
         </div>
       </div>
