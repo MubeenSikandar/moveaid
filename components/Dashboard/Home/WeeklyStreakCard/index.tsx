@@ -1,50 +1,110 @@
+"use client";
 import React from "react";
 import Image from "next/image";
 import ArrowRight from "@/assets/Arrow.svg";
+import { useLanguage } from "@/context/LanguageContext";
+
+const translations = {
+  en: {
+    title: "Weekly Streak",
+    currentStreakLabel: "Current Streak",
+    keepItUp: "Keep it up!",
+    thisWeeksProgress: "This Week's Progress",
+    currentStreak: (n: number) => `${n} Days`,
+    longestStreak: (n: number) => `${n} days`,
+    avgSessionTime: "Avg Session Time",
+    longestStreakLabel: "Longest Streak",
+    days: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+  },
+  ur: {
+    title: "ہفتہ وار سلسلہ",
+    currentStreakLabel: "موجودہ سلسلہ",
+    keepItUp: "جاری رکھیں!",
+    thisWeeksProgress: "اس ہفتے کی پیشرفت",
+    currentStreak: (n: number) => `${n} دن`,
+    longestStreak: (n: number) => `${n} دن`,
+    avgSessionTime: "اوسط سیشن وقت",
+    longestStreakLabel: "سب سے طویل سلسلہ",
+    days: ["پیر", "منگل", "بدھ", "جمعرات", "جمعہ", "ہفتہ", "اتوار"],
+  },
+} as const;
+
+const urduFont = { fontFamily: "'Noto Nastaliq Urdu', serif" };
+
+const streakData = [
+  { completed: true },
+  { completed: true },
+  { completed: false },
+  { completed: false },
+  { completed: false },
+  { completed: false },
+  { completed: false },
+];
+
+const currentStreak = 2;
+const longestStreak = 5;
+const averageSessionTime = "12 min";
 
 const WeeklyStreakCard = () => {
-  const streakData = [
-    { day: "Mon", completed: true },
-    { day: "Tue", completed: true },
-    { day: "Wed", completed: false },
-    { day: "Thu", completed: false },
-    { day: "Fri", completed: false },
-    { day: "Sat", completed: false },
-    { day: "Sun", completed: false },
-  ];
-
-  const currentStreak = 2; // days
-  const longestStreak = 5; // days
-  const averageSessionTime = "12 min"; // average session time
+  const { language, isRTL } = useLanguage();
+  const tr = translations[language];
+  const uf = isRTL ? urduFont : {};
+  const ufLine = isRTL ? { ...urduFont, lineHeight: "2" } : {};
 
   return (
-    <div className="w-full h-full flex bg-[#ebe7dd] rounded-4xl p-10">
+    <div
+      className="w-full h-full flex bg-[#ebe7dd] rounded-4xl p-10"
+      dir={isRTL ? "rtl" : "ltr"}
+    >
       <div className="flex flex-col gap-6 w-full">
-        <div className="flex items-center justify-between w-full">
-          <p className="text-2xl font-bold">Weekly Streak</p>
-          <Image src={ArrowRight} alt="arrow right" width={36} height={36} />
+        {/* Header */}
+        <div
+          className={`flex items-center justify-between w-full ${isRTL ? "flex-row-reverse" : ""}`}
+        >
+          <p className="text-2xl font-bold" style={uf}>
+            {tr.title}
+          </p>
+          <Image
+            src={ArrowRight}
+            alt="arrow right"
+            width={36}
+            height={36}
+            className={isRTL ? "scale-x-[-1]" : ""}
+          />
         </div>
-        <div className="flex items-center gap-4 w-full">
-          <p className="text-4xl font-bold">2 Days</p>
+
+        {/* Score */}
+        <div
+          className={`flex items-center gap-4 w-full ${isRTL ? "flex-row-reverse" : ""}`}
+        >
+          <p className="text-4xl font-bold" style={uf}>
+            {tr.currentStreak(currentStreak)}
+          </p>
           <div className="w-full flex flex-col">
-            <p className="text-md font-light">Current Streak</p>
-            <p className="text-md font-light">Keep it up!</p>
+            <p className="text-md font-light" style={uf}>
+              {tr.currentStreakLabel}
+            </p>
+            <p className="text-md font-light" style={uf}>
+              {tr.keepItUp}
+            </p>
           </div>
         </div>
 
-        {/* Streak Tracking Section */}
+        {/* Weekly Progress */}
         <div className="mt-4 pt-4 border-t border-gray-300">
           <div className="flex flex-col gap-6">
-            {/* Days of the Week */}
             <div className="flex flex-col gap-3">
-              <h4 className="text-lg font-semibold text-gray-800">
-                This Week&apos;s Progress
+              <h4 className="text-lg font-semibold text-gray-800" style={uf}>
+                {tr.thisWeeksProgress}
               </h4>
               <div className="grid grid-cols-7 gap-2">
                 {streakData.map((day, index) => (
                   <div key={index} className="flex flex-col items-center gap-2">
-                    <div className="text-xs font-medium text-gray-600">
-                      {day.day}
+                    <div
+                      className="text-xs font-medium text-gray-600"
+                      style={uf}
+                    >
+                      {tr.days[index]}
                     </div>
                     <div
                       className={`w-8 h-8 rounded-full flex items-center justify-center ${
@@ -66,7 +126,7 @@ const WeeklyStreakCard = () => {
                           />
                         </svg>
                       ) : (
-                        <div className="w-2 h-2 rounded-full bg-gray-400"></div>
+                        <div className="w-2 h-2 rounded-full bg-gray-400" />
                       )}
                     </div>
                   </div>
@@ -74,37 +134,31 @@ const WeeklyStreakCard = () => {
               </div>
             </div>
 
-            {/* Streak Statistics */}
+            {/* Stats */}
             <div className="flex flex-col justify-between gap-4">
-              {/* Current Streak */}
-              <div className="flex flex-row items-center justify-between">
-                <p className="text-sm font-medium text-gray-600">
-                  Current Streak
-                </p>
-                <p className="text-sm font-bold text-[#AD85D1]">
-                  {currentStreak} Days
-                </p>
-              </div>
-
-              {/* Longest Streak */}
-              <div className="flex flex-row items-center justify-between">
-                <p className="text-sm font-medium text-gray-600">
-                  Longest Streak
-                </p>
-                <p className="text-sm font-bold text-[#AD85D1]">
-                  {longestStreak} days
-                </p>
-              </div>
-
-              {/* Average Session Time */}
-              <div className="flex flex-row items-center justify-between">
-                <p className="text-sm font-medium text-gray-600">
-                  Avg Session Time
-                </p>
-                <p className="text-sm font-bold text-[#AD85D1]">
-                  {averageSessionTime}
-                </p>
-              </div>
+              {[
+                {
+                  label: tr.currentStreakLabel,
+                  value: tr.currentStreak(currentStreak),
+                },
+                {
+                  label: tr.longestStreakLabel,
+                  value: tr.longestStreak(longestStreak),
+                },
+                { label: tr.avgSessionTime, value: averageSessionTime },
+              ].map(({ label, value }) => (
+                <div
+                  key={label}
+                  className={`flex flex-row items-center justify-between ${isRTL ? "flex-row-reverse" : ""}`}
+                >
+                  <p className="text-sm font-medium text-gray-600" style={uf}>
+                    {label}
+                  </p>
+                  <p className="text-sm font-bold text-[#AD85D1]" style={uf}>
+                    {value}
+                  </p>
+                </div>
+              ))}
             </div>
           </div>
         </div>

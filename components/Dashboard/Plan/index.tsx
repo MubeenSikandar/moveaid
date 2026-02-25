@@ -2,6 +2,7 @@ import StartSessionCard from "./StartSessionCard.tsx";
 import WeeklyScheduleCard from "./WeeklyScheduleCard";
 import WorkoutCard from "./WorkoutCard";
 import PhaseProgressCard from "./PhaseProgressCard";
+import PhysiotherapyCard from "./PhysiotherapyCard";
 
 const Plan = () => {
   return (
@@ -26,9 +27,14 @@ const Plan = () => {
 
       {/* Right Column - Takes half the screen */}
       <div className="flex flex-col gap-4 w-1/2 h-full overflow-hidden">
-        {/* WorkoutCard - Takes remaining height */}
+        {/* WorkoutCard - Takes half of right column */}
         <div className="flex-1 min-h-0">
           <WorkoutCard />
+        </div>
+
+        {/* PhysiotherapyCard - Takes half of right column */}
+        <div className="flex-1 min-h-0">
+          <PhysiotherapyCard />
         </div>
       </div>
     </div>

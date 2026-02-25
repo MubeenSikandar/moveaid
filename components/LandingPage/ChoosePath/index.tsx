@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 import PathCard from "./PathCard";
+import { useLanguage } from "@/context/LanguageContext";
 import RecoverFromInjury from "@/assets/RecoverFromInjury.svg";
 import FixPosture from "@/assets/FixPosture.svg";
 import BuildAMovementHabit from "@/assets/BuildAMovementHabit.svg";
@@ -12,78 +13,107 @@ import ImproveYourWorkoutForm from "@/assets/ImproveYourWorkoutForm.svg";
 import StayActiveAtYourDesk from "@/assets/StayActiveAtYourDesk.svg";
 import LessStiffMoreMobile from "@/assets/LessStiffMoreMobile.svg";
 
-// Array of path assets with their metadata
-const pathAssets = [
-  {
-    image: RecoverFromInjury,
-    text: "Recover From Injury",
-    width: 80,
-    height: 80,
-    className: "w-20 h-20",
-    formType: "recover-from-injury",
+const translations = {
+  en: {
+    badge: "Choose Path",
+    heading: "What kind of support are you looking for?",
+    subheading:
+      "Everyone moves differently. Let's start with what your body needs.",
+    signInPrompt: "Sign in to start assessment",
+    paths: [
+      "Recover From Injury",
+      "Fix Posture",
+      "Build A Movement Habit",
+      "Improve Your Workout Form",
+      "Stay Active At Your Desk",
+      "Less Stiff More Mobile",
+    ],
   },
-  {
-    image: FixPosture,
-    text: "Fix Posture",
-    width: 80,
-    height: 80,
-    className: "w-20 h-20",
-    formType: "fix-posture",
+  ur: {
+    badge: "راستہ چنیں",
+    heading: "آپ کس قسم کی مدد تلاش کر رہے ہیں؟",
+    subheading:
+      "ہر کوئی مختلف طریقے سے حرکت کرتا ہے۔ آئیں اپنے جسم کی ضرورت سے شروع کریں۔",
+    signInPrompt: "تشخیص شروع کرنے کے لیے سائن ان کریں",
+    paths: [
+      "چوٹ سے صحت یابی",
+      "کرنسی درست کریں",
+      "حرکت کی عادت بنائیں",
+      "ورزش کی شکل بہتر کریں",
+      "ڈیسک پر فعال رہیں",
+      "کم سختی، زیادہ لچک",
+    ],
   },
-  {
-    image: BuildAMovementHabit,
-    text: "Build A Movement Habit",
-    width: 80,
-    height: 80,
-    className: "w-20 h-20",
-    formType: "build-movement-habit",
-  },
-  {
-    image: ImproveYourWorkoutForm,
-    text: "Improve Your Workout Form",
-    width: 80,
-    height: 80,
-    className: "w-20 h-20",
-    formType: "improve-workout-form",
-  },
-  {
-    image: StayActiveAtYourDesk,
-    text: "Stay Active At Your Desk",
-    width: 80,
-    height: 80,
-    className: "w-20 h-20",
-    formType: "stay-active-at-desk",
-  },
-  {
-    image: LessStiffMoreMobile,
-    text: "Less Stiff More Mobile",
-    width: 80,
-    height: 80,
-    className: "w-20 h-20",
-    formType: "less-stiff-more-mobile",
-  },
+} as const;
+
+const pathImages = [
+  RecoverFromInjury,
+  FixPosture,
+  BuildAMovementHabit,
+  ImproveYourWorkoutForm,
+  StayActiveAtYourDesk,
+  LessStiffMoreMobile,
 ];
+
+const formTypes = [
+  "recover-from-injury",
+  "fix-posture",
+  "build-movement-habit",
+  "improve-workout-form",
+  "stay-active-at-desk",
+  "less-stiff-more-mobile",
+];
+
+const urduFont = { fontFamily: "'Noto Nastaliq Urdu', serif" };
 
 const ChoosePath = () => {
   const router = useRouter();
+  const { language, isRTL } = useLanguage();
+  const tr = translations[language];
 
   const handlePathClick = (formType: string) => {
-    // Store the selected path type in localStorage or pass as query param
     localStorage.setItem("selectedPath", formType);
     router.push("/assessment");
   };
 
+  const pathAssets = pathImages.map((image, i) => ({
+    image,
+    text: tr.paths[i],
+    formType: formTypes[i],
+    width: 80,
+    height: 80,
+    className: "w-20 h-20",
+  }));
+
   return (
-    <div className="flex flex-col gap-4 items-center justify-center py-8">
+    <div
+      className="flex flex-col gap-4 items-center justify-center py-8"
+      dir={isRTL ? "rtl" : "ltr"}
+    >
+      {/* Badge */}
       <div className="flex items-center justify-center bg-[#EFEAE6] rounded-4xl p-4">
-        <p className="text-md italic">Choose Path</p>
+        <p className="text-md italic" style={isRTL ? urduFont : {}}>
+          {tr.badge}
+        </p>
       </div>
-      <p className="text-5xl font-bold text-black text-center px-[20%]">
-        What kind of support are you looking for?
+
+      {/* Heading */}
+      <p
+        className="text-5xl font-bold text-black text-center px-[20%]"
+        style={isRTL ? { ...urduFont, lineHeight: "1.6" } : {}}
+      >
+        {tr.heading}
       </p>
-      <p className="text-md text-black font-light text-center px-[20%]">
-        Everyone moves differently. Let&apos;s start with what your body needs.
+
+      {/* Subheading */}
+      <p
+        className="text-md text-black font-light text-center px-[20%]"
+        style={isRTL ? { ...urduFont, lineHeight: "2" } : {}}
+      >
+        {tr.subheading}
       </p>
+
+      {/* Path Cards Grid */}
       <div className="grid grid-cols-3 gap-4">
         {pathAssets.map((asset, index) => (
           <div key={index}>
@@ -101,12 +131,14 @@ const ChoosePath = () => {
               <SignInButton>
                 <div className="flex flex-col gap-4 items-center justify-center py-8 border-2 border-transparent rounded-2xl hover:border-gray-300 transition-all duration-300 cursor-pointer">
                   <div className="flex items-center justify-center bg-white rounded-4xl p-4">
-                    <p className="text-md italic">{asset.text}</p>
+                    <p className="text-md italic" style={isRTL ? urduFont : {}}>
+                      {asset.text}
+                    </p>
                   </div>
                   <div className="flex items-center justify-center gap-2">
                     <Image
                       src={asset.image}
-                      alt="path"
+                      alt={asset.text}
                       width={asset.width}
                       height={asset.height}
                       className={asset.className}
@@ -126,8 +158,11 @@ const ChoosePath = () => {
                     </svg>
                   </div>
                   <div className="text-center">
-                    <p className="text-sm text-gray-500 mb-2">
-                      Sign in to start assessment
+                    <p
+                      className="text-sm text-gray-500 mb-2"
+                      style={isRTL ? urduFont : {}}
+                    >
+                      {tr.signInPrompt}
                     </p>
                   </div>
                 </div>

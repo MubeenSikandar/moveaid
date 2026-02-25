@@ -7,9 +7,173 @@ import GoalsAndPreferencesActive from "@/assets/GoalsAndPreferencesActive.svg";
 import MovementAssessmentActive from "@/assets/MovementAssessmentActive.svg";
 import AccessibilityAndComfort from "@/assets/AccessibilityAndComfort.svg";
 import Logo from "@/assets/MoveAid.svg";
+import { useLanguage } from "@/context/LanguageContext";
+import LanguageSwitch from "@/context/LanguageSwitch";
+
+const translations = {
+  en: {
+    sidebarSubtitle: "Get started by setting up your Move Aid profile",
+    optimalArea: "Optimal viewing area",
+    heading: "Movement Assessment",
+    description:
+      "We'll guide you through a few simple movements to understand your mobility and create a personalized workout plan.",
+    cameraAccessDenied: "Camera Access Denied",
+    cameraAccessDeniedDesc:
+      "Please enable camera permissions in your browser settings to continue with the assessment, or skip this step.",
+    checklist: [
+      "Find a well-lit area with enough space to move freely",
+      "Position yourself so your full body is visible in the camera",
+      "Follow the on-screen instructions for each movement",
+      "You'll be asked to grant camera permission",
+    ],
+    startAssessment: "Start Assessment",
+    skipForNow: "Skip for now",
+    initializingCamera: "Initializing camera...",
+    preparingAssessment: "Preparing assessment...",
+    cameraPermissionDenied:
+      "Camera access denied. Please enable permissions and try again.",
+    standTall: "Stand tall and relaxed",
+    movementProgress: (current: number, total: number) =>
+      `Movement ${current} / ${total}`,
+    skipAssessment: "Skip Assessment",
+    nextMovement: "Next Movement →",
+    completeAssessment: "✓ Complete Assessment",
+    assessmentInstructions: [
+      "We'll guide you through a few simple moves",
+      "Stand tall and relaxed. Face forward, arms by your side. Hold still as we check your posture.",
+      "Turn your head to the left slowly",
+      "Turn your head to the right slowly",
+      "Raise your right arm above your head",
+      "Raise your left arm above your head",
+      "Bend forward slowly at the waist",
+      "Assessment complete! Great job!",
+    ],
+    steps: [
+      {
+        title: "Add Basic Details",
+        description:
+          "Provide your basic information to get started with your personalized fitness journey.",
+        active: false,
+      },
+      {
+        title: "Goals and Preferences",
+        description:
+          "Set your fitness objectives and preferences for a tailored workout experience.",
+        active: false,
+      },
+      {
+        title: "Movement Assessment",
+        description:
+          "To guide you safely, we'll begin with a quick movement check. This helps us adapt exercises to your comfort and abilities.",
+        active: true,
+      },
+      {
+        title: "Accessibility and Comfort",
+        description:
+          "Your body, your pace. Adjust settings so sessions feel comfortable, motivating, and supportive.",
+        active: false,
+      },
+    ],
+  },
+  ur: {
+    sidebarSubtitle: "اپنا Move Aid پروفائل ترتیب دے کر شروع کریں",
+    optimalArea: "بہترین دیکھنے کا رقبہ",
+    heading: "حرکت کا جائزہ",
+    description:
+      "ہم آپ کو چند آسان حرکات کے ذریعے رہنمائی دیں گے تاکہ آپ کی نقل و حرکت کو سمجھا جا سکے اور ایک ذاتی ورزشی منصوبہ بنایا جا سکے۔",
+    cameraAccessDenied: "کیمرے تک رسائی مسترد",
+    cameraAccessDeniedDesc:
+      "جائزے کو جاری رکھنے کے لیے براہ کرم اپنے براؤزر کی ترتیبات میں کیمرے کی اجازت دیں، یا اس مرحلے کو چھوڑ دیں۔",
+    checklist: [
+      "اچھی روشنی والی جگہ تلاش کریں جہاں آزادانہ حرکت کی گنجائش ہو",
+      "اپنے آپ کو اس طرح رکھیں کہ آپ کا پورا جسم کیمرے میں نظر آئے",
+      "ہر حرکت کے لیے اسکرین پر دی گئی ہدایات پر عمل کریں",
+      "آپ سے کیمرے کی اجازت مانگی جائے گی",
+    ],
+    startAssessment: "جائزہ شروع کریں",
+    skipForNow: "ابھی کے لیے چھوڑیں",
+    initializingCamera: "کیمرہ شروع ہو رہا ہے...",
+    preparingAssessment: "جائزہ تیار ہو رہا ہے...",
+    cameraPermissionDenied:
+      "کیمرے تک رسائی مسترد ہو گئی۔ براہ کرم اجازت دیں اور دوبارہ کوشش کریں۔",
+    standTall: "سیدھے اور پرسکون کھڑے ہوں",
+    movementProgress: (current: number, total: number) =>
+      `حرکت ${current} / ${total}`,
+    skipAssessment: "جائزہ چھوڑیں",
+    nextMovement: "اگلی حرکت ←",
+    completeAssessment: "✓ جائزہ مکمل کریں",
+    assessmentInstructions: [
+      "ہم آپ کو چند آسان حرکات کے ذریعے رہنمائی دیں گے",
+      "سیدھے اور پرسکون کھڑے ہوں۔ سامنے دیکھیں، بازو اطراف میں رکھیں۔ ساکت رہیں جب ہم آپ کی کرنسی دیکھیں۔",
+      "اپنا سر آہستہ بائیں طرف موڑیں",
+      "اپنا سر آہستہ دائیں طرف موڑیں",
+      "اپنا دایاں بازو سر کے اوپر اٹھائیں",
+      "اپنا بایاں بازو سر کے اوپر اٹھائیں",
+      "کمر سے آہستہ آگے کی طرف جھکیں",
+      "جائزہ مکمل! بہت اچھا!",
+    ],
+    steps: [
+      {
+        title: "بنیادی تفصیلات شامل کریں",
+        description:
+          "اپنے ذاتی فٹنس سفر کے آغاز کے لیے اپنی بنیادی معلومات فراہم کریں۔",
+        active: false,
+      },
+      {
+        title: "اہداف اور ترجیحات",
+        description:
+          "ایک موزوں ورزش کے تجربے کے لیے اپنے فٹنس مقاصد اور ترجیحات طے کریں۔",
+        active: false,
+      },
+      {
+        title: "حرکت کا جائزہ",
+        description:
+          "آپ کی محفوظ رہنمائی کے لیے ہم ایک فوری حرکت کی جانچ سے شروع کریں گے۔ یہ ہمیں مشقوں کو آپ کے آرام اور صلاحیتوں کے مطابق ڈھالنے میں مدد دیتا ہے۔",
+        active: true,
+      },
+      {
+        title: "رسائی اور آرام",
+        description:
+          "آپ کا جسم، آپ کی رفتار۔ ترتیبات ایڈجسٹ کریں تاکہ سیشن آرام دہ لگیں۔",
+        active: false,
+      },
+    ],
+  },
+} as const;
+
+const stepIcons = [
+  AddBasicDetails,
+  GoalsAndPreferencesActive,
+  MovementAssessmentActive,
+  AccessibilityAndComfort,
+];
+const urduFont = { fontFamily: "'Noto Nastaliq Urdu', serif" };
+
+const CheckBullet = () => (
+  <div className="w-6 h-6 rounded-full bg-[#AD85D1] flex items-center justify-center flex-shrink-0 mt-0.5">
+    <svg
+      className="w-3 h-3 text-white"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="3"
+        d="M5 13l4 4L19 7"
+      />
+    </svg>
+  </div>
+);
 
 const Step3 = () => {
   const router = useRouter();
+  const { language, isRTL } = useLanguage();
+  const tr = translations[language];
+  const uf = isRTL ? urduFont : {};
+  const ufLine = isRTL ? { ...urduFont, lineHeight: "2" } : {};
+
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const [showModal, setShowModal] = useState(false);
@@ -17,30 +181,12 @@ const Step3 = () => {
   const [permissionDenied, setPermissionDenied] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [mediaStream, setMediaStream] = useState<MediaStream | null>(null);
-  const [currentInstruction, setCurrentInstruction] = useState(
-    "We'll guide you through a few simple moves"
-  );
   const [assessmentStep, setAssessmentStep] = useState(0);
   const [showPostureGuide, setShowPostureGuide] = useState(true);
 
-  const assessmentInstructions = [
-    "We'll guide you through a few simple moves",
-    "Stand tall and relaxed. Face forward, arms by your side. Hold still as we check your posture.",
-    "Turn your head to the left slowly",
-    "Turn your head to the right slowly",
-    "Raise your right arm above your head",
-    "Raise your left arm above your head",
-    "Bend forward slowly at the waist",
-    "Assessment complete! Great job!",
-  ];
+  const instructions = tr.assessmentInstructions;
+  const currentInstruction = instructions[assessmentStep] ?? instructions[0];
 
-  useEffect(() => {
-    if (cameraStarted && assessmentStep < assessmentInstructions.length) {
-      setCurrentInstruction(assessmentInstructions[assessmentStep]);
-    }
-  }, [assessmentStep, cameraStarted]);
-
-  // Cleanup camera on unmount
   useEffect(() => {
     return () => {
       stopCamera();
@@ -48,47 +194,28 @@ const Step3 = () => {
     };
   }, []);
 
-  // Assign stream to video element once it's rendered
   useEffect(() => {
     if (mediaStream && videoRef.current) {
       videoRef.current.srcObject = mediaStream;
-
-      const handleLoadedMetadata = () => {
-        videoRef.current?.play().catch((err) => {
-          console.error("Error playing video:", err);
-        });
-      };
-
-      videoRef.current.onloadedmetadata = handleLoadedMetadata;
-
-      // Cleanup
+      const el = videoRef.current;
+      const handleLoaded = () => el.play().catch(console.error);
+      el.onloadedmetadata = handleLoaded;
       return () => {
-        if (videoRef.current) {
-          videoRef.current.onloadedmetadata = null;
-        }
+        el.onloadedmetadata = null;
       };
     }
   }, [mediaStream]);
 
   const stopCamera = () => {
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach((track) => {
-        track.stop();
-      });
-      streamRef.current = null;
-    }
+    streamRef.current?.getTracks().forEach((t) => t.stop());
+    streamRef.current = null;
     setMediaStream(null);
-    if (videoRef.current) {
-      videoRef.current.srcObject = null;
-    }
+    if (videoRef.current) videoRef.current.srcObject = null;
   };
 
   const openModal = () => {
     setShowModal(true);
-    // Start camera after modal opens
-    setTimeout(() => {
-      startCamera();
-    }, 300);
+    setTimeout(() => startCamera(), 300);
   };
 
   const closeModal = () => {
@@ -97,32 +224,25 @@ const Step3 = () => {
     setCameraStarted(false);
     setAssessmentStep(0);
     setPermissionDenied(false);
-    setMediaStream(null);
   };
 
   const startCamera = async () => {
     setIsLoading(true);
     setPermissionDenied(false);
-
     try {
-      // Request camera access with constraints
-      const constraints = {
+      const stream = await navigator.mediaDevices.getUserMedia({
         video: {
           facingMode: "user",
           width: { ideal: 1280 },
           height: { ideal: 720 },
         },
         audio: false,
-      };
-
-      const stream = await navigator.mediaDevices.getUserMedia(constraints);
+      });
       streamRef.current = stream;
-      setMediaStream(stream); // Store stream in state
-      setCameraStarted(true); // Flip this early to render the <video>
+      setMediaStream(stream);
+      setCameraStarted(true);
       setAssessmentStep(1);
-      setPermissionDenied(false);
-    } catch (error) {
-      console.error("Error accessing camera:", error);
+    } catch {
       setPermissionDenied(true);
     } finally {
       setIsLoading(false);
@@ -130,10 +250,9 @@ const Step3 = () => {
   };
 
   const handleNext = () => {
-    if (assessmentStep < assessmentInstructions.length - 1) {
-      setAssessmentStep(assessmentStep + 1);
+    if (assessmentStep < instructions.length - 1) {
+      setAssessmentStep((s) => s + 1);
     } else {
-      // Assessment complete
       stopCamera();
       setShowModal(false);
       router.push("/assessment/step4");
@@ -145,88 +264,49 @@ const Step3 = () => {
     router.push("/assessment/step4");
   };
 
-  const steps = [
-    {
-      icon: AddBasicDetails,
-      title: "Add Basic Details",
-      description:
-        "Provide your basic information to get started with your personalized fitness journey.",
-      active: false,
-    },
-    {
-      icon: GoalsAndPreferencesActive,
-      title: "Goals and Preferences",
-      description:
-        "Set your fitness objectives and preferences for a tailored workout experience.",
-      active: false,
-    },
-    {
-      icon: MovementAssessmentActive,
-      title: "Movement Assessment",
-      description:
-        "To guide you safely, we'll begin with a quick movement check. This helps us adapt exercises to your comfort and abilities.",
-      active: true,
-    },
-    {
-      icon: AccessibilityAndComfort,
-      title: "Accessibility and Comfort",
-      description:
-        "Your body, your pace. Adjust settings so sessions feel comfortable, motivating, and supportive.",
-      active: false,
-    },
-  ];
-
   return (
-    <div className="min-h-screen bg-[#f3f0ee] flex">
+    <div className="min-h-screen bg-[#f3f0ee] flex" dir={isRTL ? "rtl" : "ltr"}>
       {/* Left Sidebar */}
       <div className="w-full lg:w-2/5 bg-gradient-to-b from-[#efe6d9] to-[#e8dfd1] p-8 lg:p-12">
         <div className="max-w-md">
-          {/* Logo */}
-          <div className="mb-12">
+          <div className="mb-12 flex items-center justify-between">
             <Image src={Logo} alt="MoveAid" width={150} height={40} />
+            <LanguageSwitch />
           </div>
-
-          {/* Header */}
-          <p className="text-gray-600 text-sm mb-8">
-            Get started by setting up your Move Aid profile
+          <p className="text-gray-600 text-sm mb-8" style={ufLine}>
+            {tr.sidebarSubtitle}
           </p>
-
-          {/* Steps */}
           <div className="space-y-8">
-            {steps.map((step, index) => {
-              // Find if there's any active step at or after the next step
-              const shouldBeActive = steps
+            {tr.steps.map((step, index) => {
+              const shouldBeActive = tr.steps
                 .slice(index + 1)
                 .some((s) => s.active);
-
               return (
                 <div key={index} className="flex gap-4">
                   <div className="flex flex-col items-center">
                     <Image
-                      src={step.icon}
+                      src={stepIcons[index]}
                       alt={step.title}
                       width={36}
                       height={36}
                     />
-
-                    {index < steps.length - 1 && (
+                    {index < tr.steps.length - 1 && (
                       <div
-                        className={`w-0.5 h-16 my-2 ${
-                          shouldBeActive ? "bg-[#AD85D1]" : "bg-gray-300"
-                        }`}
-                      ></div>
+                        className={`w-0.5 h-16 my-2 ${shouldBeActive ? "bg-[#AD85D1]" : "bg-gray-300"}`}
+                      />
                     )}
                   </div>
-
                   <div className="flex-1 pb-8">
                     <h3
-                      className={`font-semibold mb-1 ${
-                        step.active ? "text-gray-900" : "text-gray-500"
-                      }`}
+                      className={`font-semibold mb-1 ${step.active ? "text-gray-900" : "text-gray-500"}`}
+                      style={uf}
                     >
                       {step.title}
                     </h3>
-                    <p className="text-sm text-gray-500 leading-relaxed">
+                    <p
+                      className="text-sm text-gray-500 leading-relaxed"
+                      style={ufLine}
+                    >
                       {step.description}
                     </p>
                   </div>
@@ -235,14 +315,13 @@ const Step3 = () => {
             })}
           </div>
 
-          {/* Dimension Indicator */}
           {cameraStarted && assessmentStep > 0 && (
             <div className="mt-12 p-6 bg-white rounded-xl shadow-md">
               <div className="flex items-center justify-center gap-3">
                 <div className="text-[#AD85D1] font-bold text-3xl">48 × 48</div>
               </div>
-              <p className="text-center text-sm text-gray-600 mt-2">
-                Optimal viewing area
+              <p className="text-center text-sm text-gray-600 mt-2" style={uf}>
+                {tr.optimalArea}
               </p>
             </div>
           )}
@@ -251,7 +330,6 @@ const Step3 = () => {
 
       {/* Right Content */}
       <div className="flex-1 relative overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
-        {/* Initial State - Permission Request */}
         <div className="h-full flex items-center justify-center p-8">
           <div className="max-w-2xl w-full text-center">
             <div className="bg-white rounded-3xl p-12 shadow-xl">
@@ -271,19 +349,22 @@ const Step3 = () => {
                     />
                   </svg>
                 </div>
-                <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                  Movement Assessment
+                <h2
+                  className="text-3xl font-bold text-gray-900 mb-4"
+                  style={isRTL ? { ...urduFont, lineHeight: "1.8" } : {}}
+                >
+                  {tr.heading}
                 </h2>
-                <p className="text-gray-600 text-lg mb-8">
-                  We&apos;ll guide you through a few simple movements to
-                  understand your mobility and create a personalized workout
-                  plan.
+                <p className="text-gray-600 text-lg mb-8" style={ufLine}>
+                  {tr.description}
                 </p>
               </div>
 
               {permissionDenied && (
                 <div className="mb-6 p-5 bg-red-50 border-2 border-red-200 rounded-xl">
-                  <div className="flex items-start gap-3">
+                  <div
+                    className={`flex items-start gap-3 ${isRTL ? "flex-row-reverse" : ""}`}
+                  >
                     <svg
                       className="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5"
                       fill="none"
@@ -297,115 +378,45 @@ const Step3 = () => {
                         d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
                       />
                     </svg>
-                    <div>
-                      <p className="text-red-700 font-semibold mb-1">
-                        Camera Access Denied
+                    <div className={isRTL ? "text-right" : ""}>
+                      <p className="text-red-700 font-semibold mb-1" style={uf}>
+                        {tr.cameraAccessDenied}
                       </p>
-                      <p className="text-red-600 text-sm">
-                        Please enable camera permissions in your browser
-                        settings to continue with the assessment, or skip this
-                        step.
+                      <p className="text-red-600 text-sm" style={ufLine}>
+                        {tr.cameraAccessDeniedDesc}
                       </p>
                     </div>
                   </div>
                 </div>
               )}
 
-              <div className="space-y-4 mb-8 text-left">
-                <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-full bg-[#AD85D1] flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <svg
-                      className="w-3 h-3 text-white"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="3"
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
+              <div className="space-y-4 mb-8">
+                {tr.checklist.map((item, i) => (
+                  <div
+                    key={i}
+                    className={`flex items-start gap-3 ${isRTL ? "flex-row-reverse text-right" : "text-left"}`}
+                  >
+                    <CheckBullet />
+                    <p className="text-gray-700" style={ufLine}>
+                      {item}
+                    </p>
                   </div>
-                  <p className="text-gray-700">
-                    Find a well-lit area with enough space to move freely
-                  </p>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-full bg-[#AD85D1] flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <svg
-                      className="w-3 h-3 text-white"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="3"
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
-                  </div>
-                  <p className="text-gray-700">
-                    Position yourself so your full body is visible in the camera
-                  </p>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-full bg-[#AD85D1] flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <svg
-                      className="w-3 h-3 text-white"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="3"
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
-                  </div>
-                  <p className="text-gray-700">
-                    Follow the on-screen instructions for each movement
-                  </p>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-full bg-[#AD85D1] flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <svg
-                      className="w-3 h-3 text-white"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="3"
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
-                  </div>
-                  <p className="text-gray-700">
-                    You&apos;ll be asked to grant camera permission
-                  </p>
-                </div>
+                ))}
               </div>
 
               <button
                 onClick={openModal}
                 className="w-full bg-[#AD85D1] text-white py-4 px-8 rounded-xl font-semibold hover:bg-[#9c72c0] transition-all shadow-lg hover:shadow-xl mb-4"
+                style={uf}
               >
-                Start Assessment
+                {tr.startAssessment}
               </button>
-
               <button
                 onClick={handleSkip}
                 className="w-full text-gray-600 py-3 hover:text-gray-800 transition-all"
+                style={uf}
               >
-                Skip for now
+                {tr.skipForNow}
               </button>
             </div>
           </div>
@@ -415,13 +426,10 @@ const Step3 = () => {
       {/* Assessment Modal */}
       {showModal && (
         <div className="fixed inset-0 z-50 overflow-hidden">
-          {/* Backdrop */}
           <div
-            className="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity"
+            className="absolute inset-0 bg-black/80 backdrop-blur-sm"
             onClick={closeModal}
           />
-
-          {/* Modal Content */}
           <div className="absolute inset-0 flex items-center justify-center p-4">
             <div className="relative w-full max-w-7xl h-[90vh] bg-black rounded-3xl overflow-hidden shadow-2xl">
               {/* Close Button */}
@@ -430,7 +438,7 @@ const Step3 = () => {
                 className="absolute top-6 right-6 z-50 w-12 h-12 bg-white/90 hover:bg-white rounded-full flex items-center justify-center transition-all shadow-lg group"
               >
                 <svg
-                  className="w-6 h-6 text-gray-800 group-hover:text-gray-900"
+                  className="w-6 h-6 text-gray-800"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -445,29 +453,25 @@ const Step3 = () => {
               </button>
 
               {!cameraStarted ? (
-                // Loading State
                 <div className="absolute inset-0 flex items-center justify-center bg-black">
                   <div className="text-center">
-                    <div className="w-20 h-20 border-4 border-[#AD85D1] border-t-transparent rounded-full animate-spin mx-auto mb-6"></div>
-                    <p className="text-white text-xl font-medium">
+                    <div className="w-20 h-20 border-4 border-[#AD85D1] border-t-transparent rounded-full animate-spin mx-auto mb-6" />
+                    <p className="text-white text-xl font-medium" style={uf}>
                       {isLoading
-                        ? "Initializing camera..."
-                        : "Preparing assessment..."}
+                        ? tr.initializingCamera
+                        : tr.preparingAssessment}
                     </p>
                     {permissionDenied && (
                       <div className="mt-6 p-4 bg-red-500/20 border-2 border-red-500 rounded-xl max-w-md mx-auto">
-                        <p className="text-red-200 text-sm">
-                          Camera access denied. Please enable permissions and
-                          try again.
+                        <p className="text-red-200 text-sm" style={ufLine}>
+                          {tr.cameraPermissionDenied}
                         </p>
                       </div>
                     )}
                   </div>
                 </div>
               ) : (
-                // Camera Active State
                 <div className="relative w-full h-full">
-                  {/* Video Feed - Full Screen */}
                   <video
                     ref={videoRef}
                     autoPlay
@@ -476,25 +480,30 @@ const Step3 = () => {
                     className="absolute inset-0 w-full h-full object-cover"
                     style={{ transform: "scaleX(-1)" }}
                   />
-
-                  {/* Overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/40" />
 
-                  {/* Top Instructions */}
+                  {/* Top Instruction */}
                   <div className="absolute top-8 left-1/2 transform -translate-x-1/2 z-20 w-full max-w-3xl px-4">
                     <div className="bg-white/95 backdrop-blur-sm rounded-2xl px-8 py-5 shadow-2xl">
-                      <div className="flex items-center gap-4">
+                      <div
+                        className={`flex items-center gap-4 ${isRTL ? "flex-row-reverse" : ""}`}
+                      >
                         <div className="w-4 h-4 bg-[#AD85D1] rounded-full animate-pulse flex-shrink-0" />
-                        <p className="text-gray-800 font-semibold text-xl">
+                        <p
+                          className="text-gray-800 font-semibold text-xl"
+                          style={uf}
+                        >
                           {currentInstruction}
                         </p>
                       </div>
                     </div>
                   </div>
 
-                  {/* Posture Guide Illustration */}
+                  {/* Posture Guide */}
                   {showPostureGuide && assessmentStep === 1 && (
-                    <div className="absolute top-32 right-8 z-20">
+                    <div
+                      className={`absolute top-32 ${isRTL ? "left-8" : "right-8"} z-20`}
+                    >
                       <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-6 shadow-2xl max-w-xs">
                         <div className="w-24 h-36 flex items-center justify-center mx-auto mb-3">
                           <svg
@@ -515,19 +524,26 @@ const Step3 = () => {
                             <line x1="65" y1="120" x2="70" y2="125" />
                           </svg>
                         </div>
-                        <p className="text-center text-sm text-gray-700 font-medium">
-                          Stand tall and relaxed
+                        <p
+                          className="text-center text-sm text-gray-700 font-medium"
+                          style={uf}
+                        >
+                          {tr.standTall}
                         </p>
                       </div>
                     </div>
                   )}
 
-                  {/* Progress Indicator */}
-                  <div className="absolute top-8 left-8 z-20">
+                  {/* Progress */}
+                  <div
+                    className={`absolute top-8 ${isRTL ? "right-8" : "left-8"} z-20`}
+                  >
                     <div className="bg-white/95 backdrop-blur-sm rounded-full px-6 py-3 shadow-xl">
-                      <p className="text-sm font-bold text-gray-800">
-                        Movement {assessmentStep} /{" "}
-                        {assessmentInstructions.length - 2}
+                      <p className="text-sm font-bold text-gray-800" style={uf}>
+                        {tr.movementProgress(
+                          assessmentStep,
+                          instructions.length - 2,
+                        )}
                       </p>
                     </div>
                   </div>
@@ -536,34 +552,35 @@ const Step3 = () => {
                   <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 flex gap-4">
                     <button
                       onClick={handleSkip}
-                      className="bg-white/95 backdrop-blur-sm text-gray-800 py-4 px-10 rounded-xl font-semibold hover:bg-white transition-all shadow-xl hover:shadow-2xl border-2 border-white/50"
+                      className="bg-white/95 backdrop-blur-sm text-gray-800 py-4 px-10 rounded-xl font-semibold hover:bg-white transition-all shadow-xl border-2 border-white/50"
+                      style={uf}
                     >
-                      Skip Assessment
+                      {tr.skipAssessment}
                     </button>
-
                     {assessmentStep > 0 &&
-                      assessmentStep < assessmentInstructions.length - 1 && (
+                      assessmentStep < instructions.length - 1 && (
                         <button
                           onClick={handleNext}
-                          className="bg-[#AD85D1] text-white py-4 px-10 rounded-xl font-semibold hover:bg-[#9c72c0] transition-all shadow-xl hover:shadow-2xl"
+                          className="bg-[#AD85D1] text-white py-4 px-10 rounded-xl font-semibold hover:bg-[#9c72c0] transition-all shadow-xl"
+                          style={uf}
                         >
-                          Next Movement →
+                          {tr.nextMovement}
                         </button>
                       )}
-
-                    {assessmentStep === assessmentInstructions.length - 1 && (
+                    {assessmentStep === instructions.length - 1 && (
                       <button
                         onClick={handleNext}
-                        className="bg-[#AD85D1] text-white py-4 px-10 rounded-xl font-semibold hover:bg-[#9c72c0] transition-all shadow-xl hover:shadow-2xl"
+                        className="bg-[#AD85D1] text-white py-4 px-10 rounded-xl font-semibold hover:bg-[#9c72c0] transition-all shadow-xl"
+                        style={uf}
                       >
-                        ✓ Complete Assessment
+                        {tr.completeAssessment}
                       </button>
                     )}
                   </div>
 
                   {/* Center Guide Circle */}
                   {assessmentStep > 0 &&
-                    assessmentStep < assessmentInstructions.length - 1 && (
+                    assessmentStep < instructions.length - 1 && (
                       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                         <div className="w-96 h-[28rem] rounded-full border-4 border-[#AD85D1] border-dashed opacity-40 animate-pulse" />
                       </div>

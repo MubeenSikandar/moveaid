@@ -156,7 +156,7 @@ const Exercises = () => {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (window as any).poseDetection.movenet.modelType
               .SINGLEPOSE_LIGHTNING,
-        }
+        },
       );
 
       detectorRef.current = detector;
@@ -465,7 +465,7 @@ const Exercises = () => {
   };
 
   return (
-    <div className="flex gap-4 w-full h-screen p-4 bg-[#ebe7dd] rounded-3xl">
+    <div className="flex gap-4 w-full h-screen p-4 mt-5 bg-[#ebe7dd] rounded-3xl">
       {/* Main Exercise Area - Left Side */}
       <div className="flex-1 h-full bg-gradient-to-br from-[#ebe7dd] to-[#f5f1e8] rounded-3xl p-8 shadow-2xl flex flex-col items-center justify-center relative overflow-hidden">
         {!cameraActive ? (
@@ -634,12 +634,12 @@ const Exercises = () => {
                   {index === 0
                     ? "💪"
                     : index === 1
-                    ? "🤸"
-                    : index === 2
-                    ? "🦵"
-                    : index === 3
-                    ? "🧘"
-                    : "🏃"}
+                      ? "🤸"
+                      : index === 2
+                        ? "🦵"
+                        : index === 3
+                          ? "🧘"
+                          : "🏃"}
                 </span>
               </div>
 
