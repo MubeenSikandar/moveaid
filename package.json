@@ -13,8 +13,8 @@
     "build:clean": "npm run clean && npm run build"
   },
   "dependencies": {
-    "@clerk/nextjs": "^6.33.1",
-    "next": "15.5.4",
+    "@clerk/nextjs": "^6.38.2",
+    "next": "^16.1.6",
     "react": "19.1.0",
     "react-dom": "19.1.0"
   },
