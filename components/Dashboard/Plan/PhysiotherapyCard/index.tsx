@@ -32,7 +32,7 @@ const translations = {
       {
         name: "Neck Stretches",
         category: "Mobility",
-        duration: "5-10 min",
+        duration: "5-12 min",
         difficulty: "Beginner",
         targetArea: "Neck & Upper Back",
         description:
