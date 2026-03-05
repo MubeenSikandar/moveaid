@@ -2,12 +2,25 @@
 import React, { useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 
+interface Exercise {
+  name: string;
+  category: string;
+  duration: string;
+  difficulty: string;
+  targetArea: string;
+  videoUrl?: string;
+  description: string;
+  benefits: string[];
+  instructions: string[];
+}
+
 const translations = {
   en: {
     title: "Physiotherapy Exercises",
     subtitle: "Therapeutic exercises for pain relief and mobility improvement",
     selected: "✓ Selected",
     viewDetails: "View Details",
+    watchVideo: "📺 Watch Tutorial",
     benefits: "Benefits",
     instructions: "Instructions",
     tip: "💡 Tip:",
@@ -17,6 +30,7 @@ const translations = {
     footerSelected:
       "Always consult with a healthcare professional before starting new exercises",
     footerDefault: "Scroll horizontally to browse physiotherapy exercises",
+    closeVideo: "Close",
     difficulty: {
       Beginner: "Beginner",
       Intermediate: "Intermediate",
@@ -32,9 +46,10 @@ const translations = {
       {
         name: "Neck Stretches",
         category: "Mobility",
-        duration: "5-12 min",
+        duration: "5-10 min",
         difficulty: "Beginner",
         targetArea: "Neck & Upper Back",
+        videoUrl: "https://www.youtube.com/watch?v=ekLJMzJWZU4",
         description:
           "Gentle stretches to relieve neck tension and improve mobility",
         benefits: [
@@ -55,6 +70,7 @@ const translations = {
         duration: "10-15 min",
         difficulty: "Beginner",
         targetArea: "Lower Back",
+        videoUrl: "https://www.youtube.com/watch?v=DWmGArQBtFI",
         description: "Therapeutic exercises to alleviate lower back pain",
         benefits: [
           "Reduces lower back pain",
@@ -74,6 +90,7 @@ const translations = {
         duration: "8-12 min",
         difficulty: "Intermediate",
         targetArea: "Shoulders",
+        videoUrl: "https://www.youtube.com/watch?v=qULTwquOuT4",
         description: "Improve shoulder range of motion and reduce stiffness",
         benefits: [
           "Increases shoulder flexibility",
@@ -93,6 +110,7 @@ const translations = {
         duration: "10-15 min",
         difficulty: "Intermediate",
         targetArea: "Hips & Legs",
+        videoUrl: "https://www.youtube.com/watch?v=YQmpO9VT2X4",
         description: "Release tight hip flexors from prolonged sitting",
         benefits: [
           "Improves hip mobility",
@@ -112,6 +130,7 @@ const translations = {
         duration: "15-20 min",
         difficulty: "Beginner",
         targetArea: "Full Body",
+        videoUrl: "https://www.youtube.com/watch?v=RqcOCBb4arc",
         description: "Exercises to improve overall posture and alignment",
         benefits: [
           "Corrects rounded shoulders",
@@ -131,6 +150,7 @@ const translations = {
         duration: "5-8 min",
         difficulty: "Beginner",
         targetArea: "Wrists & Hands",
+        videoUrl: "https://www.youtube.com/watch?v=fdD7CgN5FGg",
         description: "Relief for carpal tunnel and repetitive strain",
         benefits: [
           "Reduces wrist pain",
@@ -151,6 +171,7 @@ const translations = {
     subtitle: "درد سے راحت اور نقل و حرکت بہتر کرنے کے لیے علاجی مشقیں",
     selected: "✓ منتخب",
     viewDetails: "تفصیل دیکھیں",
+    watchVideo: "📺 ٹیوٹوریل دیکھیں",
     benefits: "فوائد",
     instructions: "ہدایات",
     tip: "💡 مشورہ:",
@@ -160,6 +181,7 @@ const translations = {
     footerSelected:
       "نئی مشقیں شروع کرنے سے پہلے ہمیشہ صحت کے پیشہ ور سے مشورہ کریں",
     footerDefault: "فزیو تھراپی مشقیں دیکھنے کے لیے افقی سکرول کریں",
+    closeVideo: "بند کریں",
     difficulty: {
       Beginner: "ابتدائی",
       Intermediate: "درمیانی",
@@ -178,6 +200,7 @@ const translations = {
         duration: "۵-۱۰ منٹ",
         difficulty: "Beginner",
         targetArea: "گردن اور اوپری کمر",
+        videoUrl: "https://www.youtube.com/watch?v=aNq91LH7Z6g",
         description:
           "گردن کی تناؤ کو کم کرنے اور نقل و حرکت بہتر کرنے کے لیے نرم اسٹریچ",
         benefits: [
@@ -198,6 +221,7 @@ const translations = {
         duration: "۱۰-۱۵ منٹ",
         difficulty: "Beginner",
         targetArea: "کمر کا نچلا حصہ",
+        videoUrl: "https://www.youtube.com/watch?v=DWmGArQBtFI",
         description: "کمر کے نچلے درد کو کم کرنے کے لیے علاجی مشقیں",
         benefits: [
           "کمر کا نچلا درد کم کرتا ہے",
@@ -217,6 +241,7 @@ const translations = {
         duration: "۸-۱۲ منٹ",
         difficulty: "Intermediate",
         targetArea: "کندھے",
+        videoUrl: "https://www.youtube.com/watch?v=qULTwquOuT4",
         description: "کندھے کی حرکت کی حد بڑھائیں اور سختی کم کریں",
         benefits: [
           "کندھے کی لچک بڑھاتا ہے",
@@ -236,6 +261,7 @@ const translations = {
         duration: "۱۰-۱۵ منٹ",
         difficulty: "Intermediate",
         targetArea: "کولہے اور ٹانگیں",
+        videoUrl: "https://www.youtube.com/watch?v=YQmpO9VT2X4",
         description: "دیر تک بیٹھنے سے کولہے کے تنگ پٹھوں کو آزاد کریں",
         benefits: [
           "کولہے کی نقل و حرکت بہتر کرتا ہے",
@@ -255,6 +281,7 @@ const translations = {
         duration: "۱۵-۲۰ منٹ",
         difficulty: "Beginner",
         targetArea: "پورا جسم",
+        videoUrl: "https://www.youtube.com/watch?v=RqcOCBb4arc",
         description: "مجموعی کرنسی اور توازن بہتر کرنے کے لیے مشقیں",
         benefits: [
           "گول کندھے درست کرتا ہے",
@@ -274,6 +301,7 @@ const translations = {
         duration: "۵-۸ منٹ",
         difficulty: "Beginner",
         targetArea: "کلائیاں اور ہاتھ",
+        videoUrl: "https://www.youtube.com/watch?v=fdD7CgN5FGg",
         description: "کارپل ٹنل اور دہرائی جانے والی تناؤ سے راحت",
         benefits: [
           "کلائی کا درد کم کرتا ہے",
@@ -330,9 +358,27 @@ const PhysiotherapyCard = () => {
   const ufLine = isRTL ? { ...urduFont, lineHeight: "2" } : {};
 
   const [selectedExercise, setSelectedExercise] = useState<string | null>(null);
+  const [videoModalOpen, setVideoModalOpen] = useState(false);
+  const [currentVideoUrl, setCurrentVideoUrl] = useState<string | null>(null);
 
   const handleExerciseSelect = (id: string) =>
     setSelectedExercise(selectedExercise === id ? null : id);
+
+  const handleWatchVideo = (videoUrl: string) => {
+    const videoId = videoUrl.includes("youtube.com")
+      ? videoUrl.split("v=")[1]?.split("&")[0]
+      : videoUrl.split("youtu.be/")[1];
+
+    if (videoId) {
+      setCurrentVideoUrl(`https://www.youtube.com/embed/${videoId}`);
+      setVideoModalOpen(true);
+    }
+  };
+
+  const closeVideoModal = () => {
+    setVideoModalOpen(false);
+    setCurrentVideoUrl(null);
+  };
 
   const selectedExerciseData = selectedExercise
     ? tr.exercises[parseInt(selectedExercise) - 1]
@@ -461,9 +507,25 @@ const PhysiotherapyCard = () => {
         {selectedExerciseData && (
           <div className="bg-white rounded-2xl p-4 mt-4 max-h-64 overflow-y-auto">
             <div className="space-y-4">
-              <h3 className="text-lg font-bold text-[#AD85D1]" style={uf}>
-                {tr.detailsLabel(selectedExerciseData.name)}
-              </h3>
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-bold text-[#AD85D1]" style={uf}>
+                  {tr.detailsLabel(selectedExerciseData.name)}
+                </h3>
+
+                {/* Watch Tutorial Button */}
+                {selectedExerciseData.videoUrl && (
+                  <button
+                    onClick={() =>
+                      handleWatchVideo(selectedExerciseData.videoUrl!)
+                    }
+                    className="flex items-center gap-2 bg-[#AD85D1] hover:bg-[#9c72c0] text-white px-4 py-2 rounded-full text-sm font-semibold transition-colors shadow-md hover:shadow-lg"
+                    style={uf}
+                  >
+                    <span>📺</span>
+                    <span>{tr.watchVideo}</span>
+                  </button>
+                )}
+              </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Benefits */}
@@ -528,6 +590,63 @@ const PhysiotherapyCard = () => {
           {selectedExercise ? tr.footerSelected : tr.footerDefault}
         </p>
       </div>
+
+      {/* Video Modal */}
+      {videoModalOpen && currentVideoUrl && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50"
+          onClick={closeVideoModal}
+        >
+          <div
+            className="relative bg-white rounded-3xl p-6 max-w-4xl w-full mx-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close Button */}
+            <button
+              onClick={closeVideoModal}
+              className="absolute top-4 right-4 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-full p-2 transition-colors z-10"
+              style={uf}
+            >
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+
+            {/* Video Container */}
+            <div
+              className="relative w-full"
+              style={{ paddingBottom: "56.25%" }}
+            >
+              <iframe
+                src={currentVideoUrl}
+                className="absolute top-0 left-0 w-full h-full rounded-2xl"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                title="Physiotherapy Exercise Tutorial Video"
+              />
+            </div>
+
+            {/* Close Button Text */}
+            <button
+              onClick={closeVideoModal}
+              className="mt-4 w-full bg-[#AD85D1] hover:bg-[#9c72c0] text-white py-3 rounded-full font-semibold transition-colors"
+              style={uf}
+            >
+              {tr.closeVideo}
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

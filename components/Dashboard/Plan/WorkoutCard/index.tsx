@@ -11,6 +11,7 @@ const translations = {
     searchPlaceholder: "Search exercises...",
     selected: "✓ Selected",
     viewDetails: "View Details",
+    watchVideo: "📺 Watch Tutorial",
     targetMuscles: "Target Muscles",
     secondaryMuscles: "Secondary Muscles",
     instructions: "Instructions",
@@ -19,6 +20,7 @@ const translations = {
     detailsLabel: (name: string) => `${name} - Details`,
     footerSelected: "Exercise details loaded from ExerciseDB API",
     footerDefault: "Scroll horizontally to browse exercises",
+    closeVideo: "Close",
   },
   ur: {
     title: "ورزش کی لائبریری",
@@ -29,6 +31,7 @@ const translations = {
     searchPlaceholder: "ورزشیں تلاش کریں...",
     selected: "✓ منتخب",
     viewDetails: "تفصیل دیکھیں",
+    watchVideo: "📺 ٹیوٹوریل دیکھیں",
     targetMuscles: "ہدف عضلات",
     secondaryMuscles: "ثانوی عضلات",
     instructions: "ہدایات",
@@ -37,6 +40,7 @@ const translations = {
     detailsLabel: (name: string) => `${name} - تفصیل`,
     footerSelected: "ورزش کی تفصیل ExerciseDB API سے لوڈ ہوئی",
     footerDefault: "ورزشیں دیکھنے کے لیے افقی سکرول کریں",
+    closeVideo: "بند کریں",
   },
 } as const;
 
@@ -80,6 +84,7 @@ const sampleExercises: Exercise[] = [
     exerciseType: "weight_reps",
     targetMuscles: ["Pectoralis Major Clavicular Head"],
     secondaryMuscles: ["Deltoid Anterior", "Triceps Brachii"],
+    videoUrl: "https://www.youtube.com/watch?v=rT7DgCr-3pg",
     overview:
       "Classic strength training exercise targeting chest, shoulders, and triceps.",
     instructions: [
@@ -106,6 +111,7 @@ const sampleExercises: Exercise[] = [
     exerciseType: "weight_reps",
     targetMuscles: ["Quadriceps", "Gluteus Maximus"],
     secondaryMuscles: ["Hamstrings", "Calves", "Core"],
+    videoUrl: "https://www.youtube.com/watch?v=ultWZbUMPL8",
     overview:
       "Fundamental lower body exercise for building leg and glute strength.",
     instructions: [
@@ -123,6 +129,7 @@ const sampleExercises: Exercise[] = [
     exerciseType: "weight_reps",
     targetMuscles: ["Latissimus Dorsi"],
     secondaryMuscles: ["Biceps", "Rhomboids", "Middle Trapezius"],
+    videoUrl: "https://www.youtube.com/watch?v=eGo4IYlbE5g",
     overview: "Upper body pulling exercise that builds back and arm strength.",
     instructions: [
       "Hang from pull-up bar with palms facing away",
@@ -139,6 +146,7 @@ const sampleExercises: Exercise[] = [
     exerciseType: "weight_reps",
     targetMuscles: ["Erector Spinae", "Gluteus Maximus"],
     secondaryMuscles: ["Hamstrings", "Quadriceps", "Trapezius"],
+    videoUrl: "https://www.youtube.com/watch?v=op9kVnSso6Q",
     overview:
       "Compound exercise that works multiple muscle groups simultaneously.",
     instructions: [
@@ -160,6 +168,7 @@ const sampleExercises: Exercise[] = [
     exerciseType: "weight_reps",
     targetMuscles: ["Pectoralis Major"],
     secondaryMuscles: ["Triceps", "Deltoids", "Core"],
+    videoUrl: "https://www.youtube.com/watch?v=IODxDxX7oi4",
     overview: "Classic bodyweight exercise for upper body and core strength.",
     instructions: [
       "Start in plank position with hands under shoulders",
@@ -176,6 +185,7 @@ const sampleExercises: Exercise[] = [
     exerciseType: "time_based",
     targetMuscles: ["Rectus Abdominis", "Transverse Abdominis"],
     secondaryMuscles: ["Deltoids", "Glutes", "Quadriceps"],
+    videoUrl: "https://www.youtube.com/watch?v=pSHjTRCQxIw",
     overview: "Isometric core exercise that builds stability and endurance.",
     instructions: [
       "Start in push-up position on forearms",
@@ -211,6 +221,8 @@ const WorkoutCard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [videoModalOpen, setVideoModalOpen] = useState(false);
+  const [currentVideoUrl, setCurrentVideoUrl] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchExercises = async () => {
@@ -244,6 +256,23 @@ const WorkoutCard = () => {
 
   const handleExerciseSelect = (id: string) =>
     setSelectedExercise(selectedExercise === id ? null : id);
+
+  const handleWatchVideo = (videoUrl: string) => {
+    // Convert YouTube watch URL to embed URL
+    const videoId = videoUrl.includes("youtube.com")
+      ? videoUrl.split("v=")[1]?.split("&")[0]
+      : videoUrl.split("youtu.be/")[1];
+
+    if (videoId) {
+      setCurrentVideoUrl(`https://www.youtube.com/embed/${videoId}`);
+      setVideoModalOpen(true);
+    }
+  };
+
+  const closeVideoModal = () => {
+    setVideoModalOpen(false);
+    setCurrentVideoUrl(null);
+  };
 
   const selectedExerciseData = exercises.find(
     (e) => e.exerciseId === selectedExercise,
@@ -390,9 +419,25 @@ const WorkoutCard = () => {
         {selectedExerciseData && (
           <div className="bg-white rounded-2xl p-4 mt-4 max-h-64 overflow-y-auto">
             <div className="space-y-4">
-              <h3 className="text-lg font-bold text-[#AD85D1]" style={uf}>
-                {tr.detailsLabel(selectedExerciseData.name)}
-              </h3>
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-bold text-[#AD85D1]" style={uf}>
+                  {tr.detailsLabel(selectedExerciseData.name)}
+                </h3>
+
+                {/* Watch Tutorial Button */}
+                {selectedExerciseData.videoUrl && (
+                  <button
+                    onClick={() =>
+                      handleWatchVideo(selectedExerciseData.videoUrl!)
+                    }
+                    className="flex items-center gap-2 bg-[#AD85D1] hover:bg-[#9c72c0] text-white px-4 py-2 rounded-full text-sm font-semibold transition-colors shadow-md hover:shadow-lg"
+                    style={uf}
+                  >
+                    <span>📺</span>
+                    <span>{tr.watchVideo}</span>
+                  </button>
+                )}
+              </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -520,6 +565,63 @@ const WorkoutCard = () => {
           {selectedExercise ? tr.footerSelected : tr.footerDefault}
         </p>
       </div>
+
+      {/* Video Modal */}
+      {videoModalOpen && currentVideoUrl && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50"
+          onClick={closeVideoModal}
+        >
+          <div
+            className="relative bg-white rounded-3xl p-6 max-w-4xl w-full mx-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close Button */}
+            <button
+              onClick={closeVideoModal}
+              className="absolute top-4 right-4 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-full p-2 transition-colors z-10"
+              style={uf}
+            >
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+
+            {/* Video Container */}
+            <div
+              className="relative w-full"
+              style={{ paddingBottom: "56.25%" }}
+            >
+              <iframe
+                src={currentVideoUrl}
+                className="absolute top-0 left-0 w-full h-full rounded-2xl"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                title="Exercise Tutorial Video"
+              />
+            </div>
+
+            {/* Close Button Text */}
+            <button
+              onClick={closeVideoModal}
+              className="mt-4 w-full bg-[#AD85D1] hover:bg-[#9c72c0] text-white py-3 rounded-full font-semibold transition-colors"
+              style={uf}
+            >
+              {tr.closeVideo}
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
